@@ -1,0 +1,14 @@
+{
+  "name": "cacao",
+  "version": "0.0.1",
+  "private": false,
+  "scripts": {
+    "dev": "python ./cacaodev.py compile .",
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/onepointerT/cacao.git"
+  },
+  "license": "Apache2",
+  "dependencies": {}
+}
