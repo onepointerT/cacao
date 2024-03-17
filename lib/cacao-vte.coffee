@@ -185,6 +185,9 @@ class Environment extends Stack
         @templateFormatter: (stack, current_var, var_value) ->
             tmpl = current_var.tmpl_formatter
             return tmpl.transform var_value, stack
+        
+        transformTo: (stack, tmpl2) ->
+            return this.transform tmpl2.tmpl_str, stack
 
         transform: (str, stack = new Stack()) ->
             vars = [varenv, rangelist] = Environment.Variable.findVariables @tmpl_str
@@ -261,4 +264,7 @@ class Environment extends Stack
         return variables[name].value
 
 
-module.exports = Environment
+module.exports = {
+    Environment,
+    Stack
+}
