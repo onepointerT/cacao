@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": false,
   "scripts": {
-    "dev": "python ./cacaodev.py compile .",
+    "dev": "python ./cacaodev.py compile ."
   },
   "repository": {
     "type": "git",
