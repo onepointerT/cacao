@@ -1,7 +1,11 @@
 
-import { Environment } from './cacao-vte'
+import { Environment as BaseEnvironment } from './cacao-vte'
 
 class Cacao
+    class Environment extends BaseEnvironment
+    class Variable extends BaseEnvironment.Variable
+    class Template extends BaseEnvironment.Template
+
     env: new Environment()
     tmpl: {}
 

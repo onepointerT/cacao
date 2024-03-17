@@ -75,9 +75,6 @@ class Environment extends Stack
                         variable.value = ''
                 else
                     variable.name = var_str[pos_var_name..]
-        
-        toEnv: (env) ->
-
 
     
     class Template
