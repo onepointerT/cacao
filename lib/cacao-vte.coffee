@@ -182,11 +182,13 @@ class Environment extends Stack
 
         @findVariableInString: (var_range, vars, str) ->
 
-        # TODO: Template formatter of variables
-        transform: (str) ->
+        @templateFormatter: (stack, current_var, var_value) ->
+            tmpl = current_var.tmpl_formatter
+            return tmpl.transform var_value, stack
+
+        transform: (str, stack = new Stack()) ->
             vars = [varenv, rangelist] = Environment.Variable.findVariables @tmpl_str
 
-            stack = new Stack()
             result = ''
             pos_in_str = 0
             for range, idx in rangelist
@@ -197,11 +199,18 @@ class Environment extends Stack
                     # Variables like ##start{<}
                     when Environment.Variable.Type.store
                         stack[variable.name] = variable.value
-                        result += variable.value
+
+                        if variable.tmpl_formatter?
+                            result += this.templateFormatter stack, variable, variable.value
+                        else
+                            result += variable.value
 
                     # Variables like #starttag{}
                     when Environment.Variable.Type.read
-                        result += stack[variable.name]
+                        if variable.tmpl_formatter?
+                            result += this.templateFormatter stack, variable, stack[variable.name]
+                        else
+                            result += stack[variable.name]
 
                     # Variables like ###properties{}
                     when Environment.Variable.Type.create
@@ -214,7 +223,10 @@ class Environment extends Stack
                         else
                             content_range = str[range.end+1..]
 
-                        result += variable.value + content_range
+                        if variable.tmpl_formatter?
+                            result += this.templateFormatter stack, variable, variable.value + content_range
+                        else
+                            result += variable.value + content_range
                     else
                         throw new Exception "Could not transform string. Unknown variable type '#{variable.type}'.", mark("Environment.TemplateException", new Error().lineNumber)
             return result
