@@ -199,7 +199,7 @@ class Environment extends Stack
                 switch variable.type
                     # Variables like ##start{<}
                     when Environment.Variable.Type.store
-                        stack[variable.name] = variable.value
+                        stack[variable.name] = current_range.content
 
                         if variable.tmpl_formatter?
                             result += '###' + variable.name + '{}' + this.templateFormatter stack, variable, variable.value
