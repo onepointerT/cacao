@@ -195,16 +195,16 @@ class Environment extends Stack
                 variable = varenv[idx]
                 switch variable.type
                     # Variables like ##start{<}
-                    when Environment.Variable.Type.store then
+                    when Environment.Variable.Type.store
                         stack[variable.name] = variable.value
                         result += variable.value
 
                     # Variables like #starttag{}
-                    when Environment.Variable.Type.read then
+                    when Environment.Variable.Type.read
                         result += stack[variable.name]
 
                     # Variables like ###properties{}
-                    when Environment.Variable.Type.create then
+                    when Environment.Variable.Type.create
                         if variable.value.length > 0
                             stack[variable.name] = variable.value
                         
