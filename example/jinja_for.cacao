@@ -1,0 +1,15 @@
+>>jinja_for
+----
+{% ###operand{} ###what{}{###varnames{} in ###arrayname{}} %}
+###body{}
+<script>
+console.log "#what{}"
+</script>
+{% end#operand{} %}
+----
+{% ###operand{} ###varnames{} in ###arrayname{} %}
+###body{}
+<script>
+console.log "#varnames{} in #arrayname{}"
+</script>
+{% end#operand{} %}

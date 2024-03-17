@@ -1,5 +1,6 @@
 
 import { Environment, Stack } from './cacao-vte'
+import { File } from './path'
 
 class Transition
     class Equivalence
@@ -26,3 +27,26 @@ class Transition
         stack = new Stack()
         transformation_tmpl = new Environment.Template equiv.transformation stack
         return transformation_tmpl.transform str, stack
+    
+    @fromFile: (path) ->
+        fd = new File path
+        if not fd.exists()
+            return undefined
+        fc = fd.read()
+
+        pos_equiv_1_start = strfind fc, '----\n'
+        pos_equiv_2_start = strfind fc, '----\n', pos_equiv_1_start + 5
+        if pos_equiv_1_start is -1 or pos_equiv_2_start is -1
+            return undefined
+
+        name = ''
+        if pos_equiv_1_start isnt 0
+            pos_tmpl_name = strfind fc, '>>', 0, pos_equiv_1_start
+            if pos_tmpl_name isnt -1
+                pos_name_linebreak = strfind fc, '\n', pos_tmpl_name
+                pos_tmpl_name += 2
+            name = fc[pos_tmpl_name..pos_name_linebreak-1]
+        else
+            name = genid()
+        
+        return new Transition fc[pos_equiv_1_start+5..pos_equiv_2_start], fc[pos_equiv_2_start+5..], name
