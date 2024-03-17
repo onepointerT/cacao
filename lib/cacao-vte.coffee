@@ -180,8 +180,6 @@ class Environment extends Stack
             # Return everything from the left to the right delimiter
             return new Range pos_delim_left + 1, pos_delim_right - 1, str[pos_delim_left+1..pos_delim_right-1]
 
-        @findVariableInString: (var_range, vars, str) ->
-
         @templateFormatter: (stack, current_var, var_value) ->
             tmpl = current_var.tmpl_formatter
             return tmpl.transform var_value, stack
@@ -204,9 +202,9 @@ class Environment extends Stack
                         stack[variable.name] = variable.value
 
                         if variable.tmpl_formatter?
-                            result += this.templateFormatter stack, variable, variable.value
+                            result += '###' + variable.name + '{}' + this.templateFormatter stack, variable, variable.value
                         else
-                            result += variable.value
+                            result += '###' + variable.name + '{}'
 
                     # Variables like #starttag{}
                     when Environment.Variable.Type.read

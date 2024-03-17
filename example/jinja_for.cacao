@@ -3,13 +3,13 @@
 {% ###operand{} ###what{}{###varnames{} in ###arrayname{}} %}
 ###body{}
 <script>
-console.log "#what{}"
+console.log cacao.toString "#what{}"
 </script>
 {% end#operand{} %}
 ----
 {% ###operand{} ###varnames{} in ###arrayname{} %}
 ###body{}
 <script>
-console.log "#varnames{} in #arrayname{}"
+console.log cacao.toString "#varnames{} in #arrayname{}"
 </script>
 {% end#operand{} %}
