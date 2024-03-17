@@ -1,6 +1,19 @@
 
 
 
+
+
+class Range
+    start: 0
+    end: 0
+    content: ''
+
+    constructor: (range_start, range_end, range_content = '') ->
+        @start = range_start
+        @end = range_end
+        @content = range_content
+
+
 strcountprefix: (str, findstr, pos = 0, pos_until = 0) ->
     if pos > 0
         _opstr = str[pos..]
@@ -49,6 +62,23 @@ strfindr: (str, findstr, pos = 0, pos_until = 0) ->
     return -1
 
 
+        
+strfind_delimiterInTmpl: (tmpl_str, var_range_current, var_range_next) ->
+    pos_tmpl_var_current = var_range_current.start
+    pos_tmpl_var_next = strfind tmpl_str, var_range_next.content, pos_tmpl_var_current + var_range_current.content.length
+    
+    # Now diff the content string of tmpl_str from begin of var_range_current until the next variable
+    # The result will be, thus inner contains the delimiter and
+    diff = [before, after, inner] = strdiffsimple tmpl_str[pos_tmpl_var_current..pos_tmpl_var_next], var_range_current
+
+    return new Range var_range_current.end + 1, var_range_current.end + 1 + inner.length, inner
+    
+    
+strfind_untilDelimiter: (str, from_range, delim, start = from_range.end + 1, end = str.length - delim.length - 1) ->
+    pos_delim = strfindr str, delim, start, end
+    return new Range 0, pos_delim - 1 , str[..pos_delim]
+
+
 # Returns [before, after, inner]
 strdiffsimple: (str1, str2) ->
     diff = [before, after, inner] = ['', '', '']
@@ -85,9 +115,12 @@ strsplitat: (delimiter, str, include_delimiter = false) ->
 
 
 module.exports = {
+    Range,
     strcountprefix,
     strfind,
     strfindr,
+    strfind_delimiterInTmpl,
+    strfind_untilDelimiter,
     strdiffsimple,
     strsplitat
 }

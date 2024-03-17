@@ -75,6 +75,34 @@ class Environment extends Stack
                         variable.value = ''
                 else
                     variable.name = var_str[pos_var_name..]
+        
+        @findVariable: (str, start = 0, end = str.length - 1) ->
+            pos_var_start = strfind str, '#', start, end
+            if pos_var_start > -1
+                has_tmpl = strfind str, '}{', pos_var_start, end
+                if has_tmpl > -1
+                    pos_var_end = 1 + strfind str, '}', has_tmpl+2, end
+                else
+                    pos_var_end = 1 + strfind str, '}', pos_var_start, end
+                if pos_var_end is 0
+                    throw new Exception "There is no variable inside '#{str}'.", mark("Cacao.Environment.VariableException", new Error().lineNumber)
+                return new Range pos_var_start, pos_var_end, str[pos_var_start..pos_var_end]
+            return undefined
+        
+        @findVariables: (str, start = 0, end = str.length - 1) ->
+            rangelist = [Range]
+            pos_start_next_variable = start 
+            while range = Environment.Variable.findVariable str, pos_start_next_variable, end isnt undefined
+                rangelist.push range
+                pos_start_next_variable = variable.end + 1
+
+            varenv = {}
+            for range in rangelist
+                variable = new Environment.Variable range.content
+                varenv[variable.name] = variable
+            
+            return [varenv, rangelist]
+
 
     
     class Template
@@ -116,13 +144,87 @@ class Environment extends Stack
             
             return variable_list
 
+        @findContentUntil: (str, var_range_current, var_range_next) ->
+            # Find the content between the two variables current and next
+            pos_variable_end = 1 + var_range_current.end
+            pos_next_variable = strfind @tmpl_str, '#', pos_variable_end + 1
+            content_between = str[pos_var_end..pos_next_variable]
 
+            # Find out their delimiter
+            delim_range = strfind_delimiterInTmpl @tmpl_str, var_range_current, var_range_next
+
+            # Find out with what the var_range_current is delimited
+            start = if var_range_current.start <= 0 then 0 else var_range_current.start - 1
+            if var_range_current.content.length > 0 # We have content, that delimits the following content
+                delim_range_before = new Range var_range_current.end, var_range_current.end, var_range_current.content
+            else if var_range_current.start is 0
+                delim_range_before = new Range 0, 0, ''
+            else if @tmpl_str[start..var_range_current.start] isnt '}' # We have a delimiter before in out template
+                # Find out the end of the precending variable
+                pos_var_end_before = strfindr @tmpl_str, '}', strfindr @tmpl_str, '#', var_range_current.start - 1, var_range_current.start - 1
+                delim_between = @tmpl_str[pos_var_end_before+1..var_range_current.start-1]
+                delim_range_before = new Range var_range_current.end, var_range_current.end, delim_between
+            else # If there is a delimiting string before, use it. Else find out the template content of the variable
+                pos_var_start_before = strfindr @tmpl_str, '#', 0, var_range_current.start - 1
+                pos_var_content_start = strfind @tmpl_str, '{', pos_var_start_before
+                pos_var_end_before = strfindr @tmpl_str, '}', 0, var_range_current.start - 1
+                var_range_current_new = new Range pos_var_start_before, pos_var_content_end,
+                                                  @tmpl_str[pos_var_start_before..pos_var_end_before]
+
+                delim_range_before = Environment.Template.findContentUntil str, var_range_current_new, var_range_current
+
+            # Now the left and the right delimiter is set. Find its position in text
+            pos_delim_left = strfind str, delim_range_before, 0, (strfindr str, delim_range.content)
+            pos_delim_right = strfindr str, delim_range.content, 0, pos_delim_left
+
+            # Return everything from the left to the right delimiter
+            return new Range pos_delim_left + 1, pos_delim_right - 1, str[pos_delim_left+1..pos_delim_right-1]
+
+        @findVariableInString: (var_range, vars, str) ->
+
+        # TODO: Template formatter of variables
+        transform: (str) ->
+            vars = [varenv, rangelist] = Environment.Variable.findVariables @tmpl_str
+
+            stack = new Stack()
+            result = ''
+            pos_in_str = 0
+            for range, idx in rangelist
+                current_range = Environment.Template.findContentUntilDelimiter str, ''
+                # Every variable counts where it is written, so process it now
+                variable = varenv[idx]
+                switch variable.type
+                    # Variables like ##start{<}
+                    when Environment.Variable.Type.store then
+                        stack[variable.name] = variable.value
+                        result += variable.value
+
+                    # Variables like #starttag{}
+                    when Environment.Variable.Type.read then
+                        result += stack[variable.name]
+
+                    # Variables like ###properties{}
+                    when Environment.Variable.Type.create then
+                        if variable.value.length > 0
+                            stack[variable.name] = variable.value
+                        
+                        # Now everything else
+                        if idx < rangelist.length - 1
+                            content_range = Environment.Template.findContentUntil str, range, rangelist[idx+1]
+                        else
+                            content_range = str[range.end+1..]
+
+                        result += variable.value + content_range
+                    else
+                        throw new Exception "Could not transform string. Unknown variable type '#{variable.type}'.", mark("Environment.TemplateException", new Error().lineNumber)
+            return result
+
+    
         readToEnv: (env) ->
             vars = this.read()
             for variable in vars
-                env.variables[variable.name] = variable
-                    
-
+                env.addvar variable
+    
 
     constructor: ({} = configuration) ->
         super('format_env', configuration)
