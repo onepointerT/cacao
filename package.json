@@ -2,13 +2,22 @@
   "name": "cacao",
   "version": "0.0.1",
   "private": false,
+  "type": "module",
   "scripts": {
-    "dev": "python ./cacaodev.py compile ."
+    "dev": "python ./cacaodev.py compile .",
+    "test": "jasmine --config=spec/support/jasmine.json -c" 
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/onepointerT/cacao.git"
   },
   "license": "Apache2",
-  "dependencies": {}
+  "dependencies": {
+    "cake": "^0.1.1"
+  },
+  "devDependencies": {
+    "jasmine": "^5.1.0",
+    "jasmine-expect": "^5.0.0",
+    "jasmine-spec-reporter": "^7.0.0"
+  }
 }
