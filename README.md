@@ -5,10 +5,13 @@
 This small library is implemented to handle concurrent consent in arbitrary objects, operates on the alphabet with a simple syntax:
 
 ````cacao
-* `###varname{}` stores the variable content from this position until the occurence of the next variable or a delimiter in between into the environments variable's stack
+* `###varname{}` stores the variable content from this position until the occurence of the next
+  variable or a delimiter in between into the environments variable's stack
 * `##varname{$value}` defines a value at this position
 * `#varname{}` inserts the current value of varname from environment variables at this position
-* A second brace pair behind a variable definition then transforms and formats with the script and cacao environment variables, e.g. `##varname{#body{}}{#html_full{}}` replaces `#body{}` with the values from `cacao.env.html_full` on template substitution.
+* A second brace pair behind a variable definition then transforms and formats with the script 
+  and cacao environment variables, e.g. `##varname{#body{}}{#html_full{}}` replaces `#body{}`
+  with the values from `cacao.env.html_full` on template substitution.
 ````
 
 To use the library, please import the index file
