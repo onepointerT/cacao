@@ -20,7 +20,7 @@ To use the library, please import the index file
 import 'cacao/index'
 ````
 
-You can use the python file cacao
+You can use the python file `cacaodev.py` to compile the coffeescript files or simply run `npm run dev`.
 
 ## Using
 
@@ -98,3 +98,21 @@ code_tmpl.transform jinja_text, cacao.env
 would then give a html container per loop iteration in jinja and insert everything from jinja inside.
 
 Mode and not -- more advanced examples and tests might follow.
+
+## Copyright
+
+````
+Copyright 2024 Sebastian Lau <sebastianlau995@gmail.com>
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.`
+````
