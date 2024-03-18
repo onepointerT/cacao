@@ -62,7 +62,7 @@ just from there position in a string.
 
 ````js
 code_tmpl = Cacao.Transition.fromFile 'cacao/eamples/jinja_for.cacao'
-code_tmpl.readToEnv cacao.env
+code_tmpl.equiv.template_refactoring.readToEnv cacao.env
 cacao.env.jinja_text = code_tmpl.template_refactoring.tmpl_str
 ````
 ````jinja
