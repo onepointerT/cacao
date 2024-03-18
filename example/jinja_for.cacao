@@ -1,15 +1,9 @@
 >>jinja_for
 ----
 {% ###operand{} ###what{}{###varnames{} in ###arrayname{}} %}
-###body{}
-<script>
-console.log cacao.toString "#what{}"
-</script>
+###body_jinja{}
 {% end#operand{} %}
 ----
 {% ###operand{} ###varnames{} in ###arrayname{} %}
-###body{}
-<script>
-console.log cacao.toString "#varnames{} in #arrayname{}"
-</script>
+#body_jinja{}
 {% end#operand{} %}

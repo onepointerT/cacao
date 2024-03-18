@@ -23,8 +23,7 @@ class Transition
         @equiv = equivalence
         @name = name
     
-    transform: (str) ->
-        stack = new Stack()
+    transform: (str, stack = new Stack()) ->
         transformation_tmpl = new Environment.Template equiv.transformation stack
         return transformation_tmpl.transform str, stack
     

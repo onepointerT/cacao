@@ -1,0 +1,7 @@
+>>html_substitution
+----
+##start{<}###starttag{} ###properties{}##end{>}
+###body_html{}
+#start{}/#starttag{}#end{}
+----
+<#{cacao.env.starttag} #{cacao.env.properties}>#body_jinja{}</#{cacao.env.starttag}>
