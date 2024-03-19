@@ -1,7 +1,7 @@
-import { describe } from 'coffeelib/mocha/lib/mocha'
 
-import '../index'
-jasmine = require('jasmine')
+import '../../index.js'
+
+import jasmine from 'jasmine'
 
 
 describe "Template", ->
@@ -11,7 +11,7 @@ describe "Template", ->
     
     describe "#toEnv", ->
         return it "Reads to env", ->
-            html_tmpl.readToEnv cacao.env
+            return expect(html_tmpl.readToEnv cacao.env).toEq
 
 describe "Transition", ->
     

@@ -64,7 +64,7 @@ Therefore there is a `Cacao.Transition` class, that can be used to make a fourie
 just from there position in a string.
 
 ````js
-code_tmpl = Cacao.Transition.fromFile 'cacao/eamples/jinja_for.cacao'
+code_tmpl = Cacao.Transition.fromFile 'cacao/examples/jinja_for.cacao'
 code_tmpl.equiv.template_refactoring.readToEnv cacao.env
 cacao.env.jinja_text = code_tmpl.equiv.template_refactoring.tmpl_str
 ````

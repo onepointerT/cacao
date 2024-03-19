@@ -1,7 +1,7 @@
 
-import { Cacao } from 'lib/cacao'
-import { Environment } from 'lib/cacao-vte'
-import { Transition } from 'lib/cacao-transition'
+import { Cacao } from './lib/cacao.js'
+import { Environment } from './lib/cacao-vte.js'
+import { Transition } from './lib/cacao-transition.js'
 
 module.exports = {
     Cacao,

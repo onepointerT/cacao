@@ -1,8 +1,8 @@
 
-import { Environment as BaseEnvironment } from './cacao-vte'
-import { Transition as BaseTransition } from './cacao-transition'
+import { Environment as BaseEnvironment } from './cacao-vte.js'
+import { Transition as BaseTransition } from './cacao-transition.js'
 
-import { strfind } from './str'
+import { strfind } from './str.js'
 
 class Cacao
     class Environment extends BaseEnvironment

@@ -1,6 +1,6 @@
 
-import { Environment, Stack } from './cacao-vte'
-import { File } from './path'
+import { Environment, Stack } from './cacao-vte.js'
+import { File } from './path.js'
 
 class Transition
     class Equivalence

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "python ./cacaodev.py compile .",
-    "test": "jasmine --config=spec/support/jasmine.json -c" 
+    "test": "jasmine --config=./spec/support/jasmine.json " 
   },
   "repository": {
     "type": "git",

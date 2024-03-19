@@ -11,8 +11,8 @@
 # ##body{}
 # </#starttag>
 
-import './path'
-import './str'
+import './path.js'
+import './str.js'
 
 class Stack extends {}
     stacktype: 'generic'
