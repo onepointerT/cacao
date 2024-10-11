@@ -1,6 +1,7 @@
 
 fs = require 'fs'
 path = require('node:path')
+import { open, opendir } from 'node:fs/promises'
 
 
 export class Path
@@ -56,9 +57,6 @@ export class Path
     
     exists: () ->
         return not (not fs.existsSync(@path))
-
-
-import { open, opendir } from 'node:fs/promises'
 
 
 export class Directory extends Path

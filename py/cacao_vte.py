@@ -38,7 +38,7 @@ class Environment(Stack):
             is_there_a_formatter = var_str.rfind('}{')
             if len(var_str) < 3:
                 raise EnvironmentError("'{0}' is not a var_str.".format(var_str))
-            if is_there_a_formatter > -1
+            if is_there_a_formatter > -1:
                 pos_formatter_start = 2 + var_str.find('}{')
                 tmpl_str = var_str[pos_formatter_start:len(var_str)-2]  # Omit closing brace
 
@@ -86,7 +86,7 @@ class Environment(Stack):
             return None
 
         @staticmethod
-        def findVariables(var_str: str, start=0, end=len(var_str)-1):
+        def findVariables(var_str: str, start=0, end=0):
             if len(var_str) is 0:
                 raise EnvironmentError("There is no variable inside '{0}'.".format(var_str))
 
@@ -116,7 +116,7 @@ class Environment(Stack):
         @staticmethod
         def fromCode(tmplstr: str):
             pos_tmpl_name = tmplstr.find('>>')
-            if pos_tmpl_name > -1
+            if pos_tmpl_name > -1:
                 pos_name_linebreak = tmplstr.find('\n', pos_tmpl_name)
                 pos_tmpl_name += 2
                 name = tmplstr[pos_tmpl_name:pos_name_linebreak-1]
@@ -167,15 +167,14 @@ class Environment(Stack):
                 delim_range_before = Range(var_range_current.end, var_range_current.end, var_range_current.content)
             elif var_range_current.start is 0:
                 delim_range_before = Range(0, 0, '')
-            elif content_str[start:var_range_current.start] is not '}': # We have a delimiter before in out template
-                pos_var_end_before = content_str.rfind('}', content_str.rfind('#', var_range_current.start -1))
+            elif content_str[start:var_range_current.start + 1].rfind('} ') > - 1: # We have a delimiter before in out template
+                pos_var_end_before = content_str.rfind('} ', var_range_current.start -1)
                 delim_between = content_str[pos_var_end_before+1:var_range_current.start-1]
                 delim_range_before = Range(var_range_current.end, var_range_current.end, delim_between)
             else: # If there is a delimiting string before, use it. Else find out the template content of the variable
-                pos_var_start_before = content_str.rfind('#', 0, var_range_current.end - 1)
-                pos_var_content_start = content_str.find('{', pos_var_start_before)
-                pos_var_end_before = content_str.rfind('}', 0, var_range_current.end - 1)
-                var_range_current_new = Range(pos_var_start_before, pos_var_end_before, content_between[pos_var_start_before:pos_var_end_before])
+                pos_var_content_end_before = var_range_current.start - 1
+                pos_var_end_before = content_str.rfind('} ', 0, var_range_current.start - 1)
+                var_range_current_new = Range(pos_var_end_before, pos_var_content_end_before, content_between[pos_var_end_before:pos_var_content_end_before])
 
                 delim_range_before = Environment.Template.findContentUntil(content_str, var_range_current_new, var_range_current)
 
@@ -211,7 +210,7 @@ class Environment(Stack):
                     else:
                         result += str[rangelist[idx].end:]
 
-                return Range(0, len(content_str), result)
+                return Range(pos_next_hashtag, len(result)-1-pos_next_hashtag, result)
             elif content_str.find(delim) > -1:
                 pos = content_str.find(delim)
                 return Range(0, pos, content_str[:pos])
@@ -244,7 +243,7 @@ class Environment(Stack):
                         result += stack[variable.name]
 
                 # Variables like ###properties{}
-                elif variable.type is Environment.Variable.Type.create
+                elif variable.type is Environment.Variable.Type.create:
                     if len(variable.value) > 0:
                         stack[variable.name] = variable.value
 

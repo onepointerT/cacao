@@ -1,0 +1,16 @@
+{
+    msn: {
+        url: "https://www.msn.com/de-de/feed"
+        news: "destinationurl=##news{ }"
+        sparse: {
+            title: "title="
+            description: "abstract="
+            text: "#news"
+        }
+        tmpl: """#|title
+        #|description
+        
+        #|text
+        """
+    }
+}

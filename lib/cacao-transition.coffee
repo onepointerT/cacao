@@ -44,7 +44,8 @@ class Transition
             if pos_tmpl_name isnt -1
                 pos_name_linebreak = strfind fc, '\n', pos_tmpl_name
                 pos_tmpl_name += 2
-            name = fc[pos_tmpl_name..pos_name_linebreak-1]
+                name = fc[pos_tmpl_name..pos_name_linebreak-1]
+            name = genid()
         else
             name = genid()
         

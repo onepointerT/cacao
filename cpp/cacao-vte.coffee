@@ -92,9 +92,9 @@ class Environment extends Stack
         @findVariables: (str, start = 0, end = str.length - 1) ->
             rangelist = [Range]
             pos_start_next_variable = start 
-            while range = Environment.Variable.findVariable str, pos_start_next_variable, end isnt undefined
+            while (range = Environment.Variable.findVariable str, pos_start_next_variable, end) isnt undefined
                 rangelist.push range
-                pos_start_next_variable = variable.end + 1
+                pos_start_next_variable = range.end + 1
 
             varenv = {}
             for range in rangelist
@@ -102,7 +102,6 @@ class Environment extends Stack
                 varenv[variable.name] = variable
             
             return [varenv, rangelist]
-
 
     
     class Template
@@ -148,7 +147,7 @@ class Environment extends Stack
             # Find the content between the two variables current and next
             pos_variable_end = 1 + var_range_current.end
             pos_next_variable = strfind str, '#', pos_variable_end + 1
-            content_between = str[pos_var_end..pos_next_variable]
+            content_between = str[pos_var_end+1..pos_next_variable]
 
             # Find out their delimiter
             delim_range = strfind_delimiterInTmpl str, var_range_current, var_range_next
@@ -159,16 +158,17 @@ class Environment extends Stack
                 delim_range_before = new Range var_range_current.end, var_range_current.end, var_range_current.content
             else if var_range_current.start is 0
                 delim_range_before = new Range 0, 0, ''
-            else if str[start..var_range_current.start] isnt '}' # We have a delimiter before in out template
+            else if @tmpl_str[start..var_range_current.start] isnt '}' # We have a delimiter before in out template
                 # Find out the end of the precending variable
-                pos_var_end_before = strfindr str, '} ', var_range_current.start - 1
-                delim_between = str[pos_var_end_before+1..var_range_current.start-1]
+                pos_var_end_before = strfindr @tmpl_str, '}', strfindr @tmpl_str, '#', var_range_current.start - 1, var_range_current.start - 1
+                delim_between = @tmpl_str[pos_var_end_before+1..var_range_current.start-1]
                 delim_range_before = new Range var_range_current.end, var_range_current.end, delim_between
             else # If there is a delimiting string before, use it. Else find out the template content of the variable
-                pos_var_content_end = var_range_current.start - 1
-                pos_var_end_before = strfindr str, '} ', 0, var_range_current.start - 1
-                var_range_current_new = new Range pos_var_end_before, pos_var_content_end,
-                                                  str[pos_var_end_before..pos_var_content_end]
+                pos_var_start_before = strfindr @tmpl_str, '#', 0, var_range_current.start - 1
+                pos_var_content_start = strfind @tmpl_str, '{', pos_var_start_before
+                pos_var_end_before = strfindr @tmpl_str, '}', 0, var_range_current.start - 1
+                var_range_current_new = new Range pos_var_start_before, pos_var_content_end,
+                                                  @tmpl_str[pos_var_start_before..pos_var_end_before]
 
                 delim_range_before = Environment.Template.findContentUntil str, var_range_current_new, var_range_current
 
@@ -186,11 +186,8 @@ class Environment extends Stack
         transformTo: (stack, tmpl2) ->
             return this.transform tmpl2.tmpl_str, stack
 
-        @findContentUntilDelimiter (str, delim) ->
-            return new Range( 0, 0, "" )
-
         transform: (str, stack = new Stack()) ->
-            vars = [varenv, rangelist] = Environment.Variable.findVariables str
+            vars = [varenv, rangelist] = Environment.Variable.findVariables @tmpl_str
 
             result = ''
             pos_in_str = 0

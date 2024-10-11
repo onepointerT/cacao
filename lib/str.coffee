@@ -56,13 +56,13 @@ strfindr: (str, findstr, pos = 0, pos_until = 0) ->
         _opstr = str[..pos_until]
     else
         _opstr = str
-    i = _opstr.length
+    i = _opstr.length-1
     for srch_str, i in _opstr of i is [_opstr.length-findstr.length-1..0] when srch_str[i+findstr.length..i] is findstr
         return i
     return -1
 
 
-        
+
 strfind_delimiterInTmpl: (tmpl_str, var_range_current, var_range_next) ->
     pos_tmpl_var_current = var_range_current.start
     pos_tmpl_var_next = strfind tmpl_str, var_range_next.content, pos_tmpl_var_current + var_range_current.content.length
@@ -74,9 +74,9 @@ strfind_delimiterInTmpl: (tmpl_str, var_range_current, var_range_next) ->
     return new Range var_range_current.end + 1, var_range_current.end + 1 + inner.length, inner
     
     
-strfind_untilDelimiter: (str, from_range, delim, start = from_range.end + 1, end = str.length - delim.length - 1) ->
-    pos_delim = strfindr str, delim, start, end
-    return new Range 0, pos_delim - 1 , str[..pos_delim]
+strfind_untilDelimiter: (str, from_range, delim, rstart = from_range.end + 1, end = str.length - delim.length - 1) ->
+    pos_delim = strfindr str, delim, from_range, rstart
+    return new Range from_range.start, pos_delim, str[..pos_delim]
 
 
 # Returns [before, after, inner]
