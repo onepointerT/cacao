@@ -307,7 +307,7 @@ auto DirectoryContent::operator<=>(const DirectoryContent& rhs) const {
     return this->path().repr() <=> rhs.path().repr();
 }
 
-auto DirectoryContent::operator<=>(const DirectoryContent*rhs) const {
+auto DirectoryContent::operator<=>(const DirectoryContent* rhs) const {
     return this->path().repr() <=> rhs->path().repr();
 }
 

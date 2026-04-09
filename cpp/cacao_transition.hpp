@@ -12,6 +12,7 @@ namespace cacao {
 
 
 class Transition {
+public:
     class Equivalence {
     public:
         Environment::Template* tmpl_before = nullptr;

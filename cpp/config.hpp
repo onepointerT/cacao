@@ -17,13 +17,14 @@ class StringDict
     ,   protected std::string
 {
 protected:
-
+    friend class StringDict;
 
 public:
     typedef std::map< std::string, std::string > dict_t;
     typedef std::string string_t;
     
     using dict_t::at;
+    using dict_t::clear;
     using dict_t::const_iterator;
     using dict_t::iterator;
     using dict_t::begin;

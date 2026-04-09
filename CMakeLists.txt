@@ -1,5 +1,5 @@
 cmake_minimum_required( VERSION 3.28 )
-project( cacao )
+project( cacao LANGUAGES CXX )
 
 set( CMAKE_CXX_STANDARD 23 )
 set( CMAKE_CXX_STANDARD_REQUIRED ON )
@@ -9,7 +9,7 @@ set( CMAKE_C_STANDARD_REQUIRED ON )
 if( UNIX )
     add_definitions( -fpermissive )
 elseif( _MSC_BUILD )
-    add_definitions( /std:latest /clatest /cpplatest )
+    #add_definitions( /std:latest /clatest /cpplatest )
 endif()
 
 
@@ -22,9 +22,9 @@ endif()
 
 #enable_language(Go)
 
-
-file( GLOB CPP_SRCFILES cpp/*.cpp )
+include_directories( lib/difflib/src )
 include_directories( cpp/ )
+file( GLOB CPP_SRCFILES cpp/*.cpp )
 add_library( cacao STATIC ${CPP_SRCFILES} )
 target_link_libraries( cacao stdc++ )
 

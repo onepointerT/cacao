@@ -1,10 +1,27 @@
 
 #pragma once
 
+#include <concepts>
+#include <list>
+#include <memory>
+#include <ranges>
+#include <regex>
 #include <string>
 #include <utility>
 #include <vector>
 
+
+namespace std {
+
+template< class InputIt >
+concept is_same_object_iterator
+            = requires ( InputIt start, InputIt end )
+{
+    { std::ranges::begin(std::ranges::subrange{ start, end }).front()
+        == std::ranges::end(std::ranges::subrange{start, end}).front() }
+};
+
+} // namespace std
 
 namespace cacao {
 
@@ -78,6 +95,33 @@ public:
                             , const std::string str
                             , const bool include_delimiter = false
     );
+
+    class Pattern final
+        :   public std::pair< std::string, std::string >
+        ,   protected std::string
+    {
+    private:
+        std::regex_constants::syntax_option_type regex_type;    
+
+    public:
+        Pattern( const std::string delim_left, const std::string delim_right
+               , const std::string pattern_between = "\s*"
+               , const std::regex_constants::syntax_option_type rtype
+                                = std::regex_constants::icase
+        );
+
+        typedef typename cacao::Range position_t;
+
+        const position_t findWithin( const std::string str
+                                , const std::string prefix = ""
+                                , const std::string suffix = ""
+        );
+
+        const std::list< position_t > const& find( const std::string str
+                                                 , const std::string prefix = ""
+                                                 , const std::string suffix = ""
+        );
+    };
 };
 
 

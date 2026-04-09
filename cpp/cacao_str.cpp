@@ -211,6 +211,53 @@ Str::token_list_t Str::splitat( const char* delimiter
 }
 
 
+Str::Pattern::Pattern( const std::string delim_left, const std::string delim_right
+                     , const std::string pattern_between
+                     , const std::regex_constants::syntax_option_type rtype
+)   :   std::pair< std::string, std::string >{ delim_left, delim_right }
+    ,   std::string( pattern_between )
+    ,   regex_type( rtype )
+{}
+
+const Str::Pattern::position_t Str::Pattern::findWithin( const std::string str
+                                                       , const std::string prefix
+                                                       , const std::string suffix
+) {
+    std::string regex_str = prefix + *this + suffix;
+    std::regex rgx( regex_str, regex_type );
+    std::smatch m;
+    if ( std::regex_search( str, m, rgx, std::regex_constants::match_continuous ) ) {
+        return *new cacao::Range( m.position(), m.position() + m.length(), m.str() );
+    }
+
+    return *new cacao::Range( 0, 0, "" );
+}
+
+const std::list< Str::Pattern::position_t > const& Str::Pattern::find( const std::string str
+                                                         , const std::string prefix
+                                                         , const std::string suffix
+) {
+    std::string regex_str = prefix + *this + suffix;
+    std::regex rgx( regex_str, regex_type );
+    std::smatch m;
+    std::list< Str::Pattern::position_t >* lst = new std::list< Str::Pattern::position_t >();
+    if ( std::regex_search( str, m, rgx , std::regex_constants::match_continuous ) ) {
+        lst->push_front( *new cacao::Range( m.position(), m.position() + m.length(), m.str() ) );
+        if ( m.prefix().length() > 0 && std::regex_search( m.prefix().str(), rgx ) ) {
+            const std::list< Str::Pattern::position_t >& lst_append_prefix = this->find( m.prefix() );
+            lst->append_range( std::ranges::subrange{ lst_append_prefix.cbegin(), lst_append_prefix.cend() } );
+        }
+        if (  m.suffix().length() > 0 && std::regex_search( m.suffix().str(), rgx ) ) {
+            const std::list< Str::Pattern::position_t >& lst_append_suffix = this->find( m.suffix() );
+            lst->append_range( std::ranges::subrange{ lst_append_suffix.cbegin(), lst_append_suffix.cend() } );                
+        }
+    }
+
+    return *lst;
+}
+
+
+
 uuid_t genuuidv4() {
   std::stringstream s;
   std::random_device rd;

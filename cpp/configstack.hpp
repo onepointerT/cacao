@@ -25,7 +25,7 @@ public:
     using cmap_t::end;
     using cmap_t::at;
     using cmap_t::size;
-    using cmap_t::contains;
+//    using cmap_t::contains;
     using Config::operator+=;
     using Config::operator[];
 
@@ -62,6 +62,15 @@ public:
             }
         }
         return nullptr;
+    }
+
+    bool contains( const std::string key ) const {
+        for ( typename cmap_t::const_iterator cit = cmap_t::cbegin()
+            ; cit != cmap_t::cend(); ++cit
+        ) {
+            if ( cit->first.compare(key) == 0 ) return true;
+        }
+        return false;
     }
 };
 

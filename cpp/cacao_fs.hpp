@@ -188,7 +188,7 @@ public:
     // Used for sorting in `std::set< T >`.
     auto operator<=>(const DirectoryContent& rhs) const;
     // Used for sorting in `std::set< T* >`.
-    auto operator<=>(const DirectoryContent*rhs) const;
+    auto operator<=>(const DirectoryContent* rhs) const;
     // Used for key comparator in `std::set< T >`.
     operator std::basic_string<char>() const;
 };

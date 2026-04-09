@@ -1,16 +1,18 @@
 # cacao
 ### Concurrent Arbitrary Consent Artificial Objects
-#### v0.1.0
+#### v0.2.0
 
 This small library is implemented to handle concurrent consent in arbitrary objects, operates on the alphabet with a simple syntax:
 
 ````cacao
-* `###varname{}` stores the variable content from this position until the occurence of the next
-  variable or a delimiter in between into the environments variable's stack
-* `##varname{$value}` defines a value at this position
-* `#varname{}` inserts the current value of varname from environment variables at this position
-* A second brace pair behind a variable definition then transforms and formats with the script 
-  and cacao environment variables, e.g. `##varname{#body{}}{#html_full{}}` replaces `#body{}`
+* Outter top-level variables are surrounded by 1 to 3 hashtags with the following functionality:
+  * `###varname{}###` stores the variable content from this position until the occurence of the next and grabs everything of the regex inside the first braces to a variable or a delimiter in between into the environments variable's stack
+    * Inside of a second brace, the definition of storing, reading and creating variables can be done with cacao template variables inside an ECMA-Regex  surrounding with `###store_a_value_variable`, `##read_from_a_variable_and_insert_here` and `#create_a_variable_if_matching_tmpl{$regex_tmpl}`.
+  * `##varname{}{$cacao_script_regex}{$formatting_regex}##` defines a value at this position and stores it, according to an optional third brace with an ICase formatter terminated with `'|'` which then is followed by the variables given with `$varname`
+  * `#varname{}#` inserts the current value of varname from environment variables at this position and allows the formatter-brace (third brace once)
+* A second brace pair behind a variable definition then transforms the script and a third brace formats with the script 
+  and cacao environment variables, e.g. `##varname{#body{}}_{#html_full{}}{}##
+  ` replaces `#body{}`
   with the values from `cacao.env.html_full` on template substitution.
 ````
 
