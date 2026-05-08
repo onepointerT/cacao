@@ -22,11 +22,27 @@ endif()
 
 #enable_language(Go)
 
-include_directories( lib/difflib/src )
-include_directories( cpp/ )
-file( GLOB CPP_SRCFILES cpp/*.cpp )
-add_library( cacao STATIC ${CPP_SRCFILES} )
-target_link_libraries( cacao stdc++ )
+include_directories( ${PROJECT_SOURCE_DIR}/lib/difflib/src/ )
 
-#file( GLOB GO_SRCFILES go/*.go )
-#add_go_library( cacao_go STATIC ${GO_SRCFILES} )
+include_directories( ${PROJECT_SOURCE_DIR}/lib/libtruth/ )
+add_subdirectory( ${CMAKE_CURRENT_SOURCE_DIR}/lib/libtruth)
+
+include_directories( ${PROJECT_SOURCE_DIR}/lib/psem )
+set ( SOURCES_PSEM_TIME ${CMAKE_CURRENT_SOURCE_DIR}/lib/psem/ptime.c
+                        ${CMAKE_CURRENT_SOURCE_DIR}/lib/psem/semaphore.c
+                        ${CMAKE_CURRENT_SOURCE_DIR}/lib/psem/systime.c )
+add_library( psem_time ${SOURCES_PSEM_TIME} )
+
+
+include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/cacao/ )
+file( GLOB CPP_SRCFILES ${PROJECT_SOURCE_DIR}/cacao/*.cpp )
+add_library( cacao STATIC ${CPP_SRCFILES} )
+target_link_libraries( cacao psem_time oneptr_bool stdc++ )
+
+
+find_package(Doxygen)
+if(DOXYGEN_FOUND)
+    message("-- Enabled doc_cacao target for make")
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
+    add_custom_target(doc_cacao ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR} COMMENT "Generating documentation with Doxygen")
+endif()

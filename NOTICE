@@ -1,0 +1,10 @@
+Copyright (C) 2026 Sebastian Lau; OnePointer UG <sebastianlau995@gmail.com>
+
+I added a more structured-and-overviewable license model than Apache (both licenses comply with each other).
+   -> ISC: Like with Apache, you need to honor the patent and/or copyright holder
+   -> AFL: Like with Apache, you need to honor thus there are patents of the library, but can choose your
+        own license as long as they comply with the files `LICENSE` and `NOTICE` or `LICENSE.OnePointer` and
+        choose to derivate open or even commercial use.
+   -> Also: You must retain, that you share your copyright with the patent holder and inventing company or naturlijk person,
+        if commiting to the library itself without the meaning of derivative work, and every person is to
+        be honored, if, and only if, it commited an substantial additional portion of the library.

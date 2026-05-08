@@ -1,3 +1,9 @@
 [submodule "lib/difflib"]
 	path = lib/difflib
 	url = https://github.com/duckie/difflib.git
+[submodule "lib/libtruth"]
+	path = lib/libtruth
+	url = https://github.com/onepointerT/libtruth.git
+[submodule "lib/psem"]
+	path = lib/psem
+	url = https://github.com/onepointerT/posixSemaphore.git
